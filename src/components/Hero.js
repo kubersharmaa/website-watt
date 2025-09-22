@@ -1,9 +1,16 @@
+// app/components/Hero.js
+
 "use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import Slider from "react-slick";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
+
+// Import slick carousel styles
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 // Custom Prev Arrow
 function PrevArrow({ onClick }) {
@@ -31,6 +38,8 @@ function NextArrow({ onClick }) {
 
 export default function Hero() {
   const sliderRef = useRef(null);
+  const videoRefs = useRef([]);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   const slides = [
     {
@@ -76,46 +85,50 @@ export default function Hero() {
     speed: 800,
     slidesToShow: 1,
     slidesToScroll: 1,
-    autoplay: false, // we control autoplay manually
+    autoplay: false,
     arrows: true,
     prevArrow: <PrevArrow />,
     nextArrow: <NextArrow />,
     pauseOnHover: false,
+    beforeChange: (_, newIndex) => setCurrentSlide(newIndex),
   };
 
-  // Auto-advance images after 4 seconds
+  // Play the active video and pause others
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (sliderRef.current) {
-        const currentSlide =
-          sliderRef.current.innerSlider.state.currentSlide;
-        const current = slides[currentSlide];
-        if (current.type === "image") {
-          sliderRef.current.slickNext();
-        }
-      }
-    }, 4000);
+    videoRefs.current.forEach((video, idx) => {
+      if (!video) return;
 
-    return () => clearInterval(interval);
-  }, [slides]);
+      if (idx === currentSlide) {
+        video.currentTime = 0; // Rewind active video
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+          playPromise.catch((error) => {
+            // Autoplay was prevented.
+            console.log("Autoplay was prevented:", error);
+          });
+        }
+      } else {
+        video.pause();
+        video.currentTime = 0; // Reset non-active videos
+      }
+    });
+  }, [currentSlide]);
 
   return (
     <section className="relative w-full h-screen">
       <Slider ref={sliderRef} {...settings} className="h-full">
         {slides.map((slide, idx) => (
           <div key={idx} className="relative w-full h-screen">
-            {/* Media (Image or Video) */}
             {slide.type === "video" ? (
               <video
+                ref={(el) => (videoRefs.current[idx] = el)}
                 src={slide.media}
                 className="w-full h-full object-cover"
-                autoPlay
                 muted
                 playsInline
+                autoPlay
                 onEnded={() => {
-                  if (sliderRef.current) {
-                    sliderRef.current.slickNext();
-                  }
+                  if (sliderRef.current) sliderRef.current.slickNext();
                 }}
               />
             ) : (

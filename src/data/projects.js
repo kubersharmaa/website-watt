@@ -58,9 +58,10 @@ We support a variety of materials including PLA, ABS, and TPU, allowing flexibil
     category: "AI & Healthcare",
     status: "In Progress",
     images: [
-      "/projects/dr.bharti1.jpg",
-      "/projects/dr.bharti2.jpg",
-      "/projects/dr.bharti3.jpg",
+      "/projects/dr1.jpg",
+      "/projects/dr2.jpg",
+      "/projects/dr3.jpg",
+      "/projects/dr4.jpg",
     ],
     description: `Dr. Bharti is a personalized AI model designed to function as a virtual healthcare assistant, developed through in-depth research in artificial intelligence and natural language processing. 
     The system aims to support medical professionals and patients by providing intelligent, conversational interaction for health monitoring, symptom analysis, and basic diagnostics.
