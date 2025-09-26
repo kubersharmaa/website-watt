@@ -11,8 +11,8 @@ export default function Navbar() {
     <nav className="shadow-lg">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between bg-gray-900 text-white rounded-lg">
         
-        {/* Logo */}
-        <div className="flex items-center space-x-6">
+        {/* Logo (Clickable) */}
+        <Link href="/" className="flex items-center space-x-6">
           <Image
             src="/logo.jpeg"
             alt="Watt Incorporate Logo"
@@ -23,7 +23,7 @@ export default function Navbar() {
           <span className="font-bold text-2xl tracking-wide">
             WATT Incorporate
           </span>
-        </div>
+        </Link>
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center space-x-8">
