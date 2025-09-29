@@ -129,42 +129,50 @@ export default function Home() {
         )}
       </section>
 
-      {/* Gallery */}
-      <section className="my-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 gap-4 sm:gap-0">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white">Galleries</h2>
-          <Link
-            href="/gallery"
-            className="text-teal-400 font-semibold hover:text-teal-500 transition"
-          >
-            Explore More →
-          </Link>
-        </div>
+      {/* Gallery Section */}
+<section className="my-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  {/* Section Header */}
+  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 gap-4 sm:gap-0">
+    <h2 className="text-3xl sm:text-4xl font-bold text-white">Galleries</h2>
+    <Link
+      href="/gallery"
+      className="text-teal-400 font-semibold hover:text-teal-500 transition"
+    >
+      Explore More →
+    </Link>
+  </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
-          {gallery
-            ?.flatMap((event) =>
-              event.images.map((img) => ({ img, title: event.title }))
-            )
-            .slice(0, 3)
-            .map((item, index) => (
-              <div
-                key={index}
-                className="relative w-full h-64 sm:h-72 md:h-64 rounded-2xl overflow-hidden bg-gray-900/90 border border-gray-800 shadow-lg hover:shadow-teal-500/30 transform hover:-translate-y-1 transition-all duration-500"
-              >
-                <Image
-                  src={item.img}
-                  alt={item.title}
-                  fill
-                  className="object-cover transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-500">
-                  <p className="text-white text-center font-semibold px-4">{item.title}</p>
-                </div>
-              </div>
-            ))}
+  {/* Gallery Grid */}
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+    {gallery
+      ?.flatMap((event) =>
+        event.images.map((img) => ({ img, title: event.title }))
+      )
+      .slice(0, 3)
+      .map((item, index) => (
+        <div
+          key={index}
+          className="relative w-full h-64 sm:h-72 md:h-64 rounded-2xl overflow-hidden bg-gray-900/90 border border-gray-800 shadow-lg hover:shadow-teal-500/30 transform hover:-translate-y-1 transition-all duration-500"
+        >
+          {/* Image */}
+          <Image
+            src={item.img}
+            alt={item.title}
+            fill
+            className="object-cover object-top transition-transform duration-500"
+          />
+
+          {/* Overlay */}
+          <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-500">
+            <p className="text-white text-center font-semibold px-4">
+              {item.title}
+            </p>
+          </div>
         </div>
-      </section>
+      ))}
+  </div>
+</section>
+
 
       {/* Partners */}
 <section className="my-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
