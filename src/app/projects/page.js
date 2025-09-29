@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import projects from "@/data/projects";
 
@@ -21,6 +21,22 @@ export default function ProjectsPage() {
   const [selectedProject, setSelectedProject] = useState(null);
   const [currentImage, setCurrentImage] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState("All");
+
+  // ✅ Disable background scroll + hide scrollbar when modal open
+  useEffect(() => {
+    if (selectedProject) {
+      document.body.style.overflow = "hidden";   // disable background scroll
+      document.body.style.paddingRight = "0px";  // remove scrollbar gap
+    } else {
+      document.body.style.overflow = "auto";     // enable back
+      document.body.style.paddingRight = "0px";
+    }
+
+    return () => {
+      document.body.style.overflow = "auto";
+      document.body.style.paddingRight = "0px";
+    };
+  }, [selectedProject]);
 
   const handleNextImage = () => {
     if (selectedProject) {
@@ -102,7 +118,7 @@ export default function ProjectsPage() {
             </div>
 
             {/* Scrollable Content */}
-            <div className="flex flex-col overflow-y-auto max-h-40 scrollbar-thin scrollbar-thumb-transparent hover:scrollbar-thumb-teal-400">
+            <div className="flex flex-col overflow-y-auto max-h-40 scrollbar-hide">
               <h2 className="text-xl font-semibold mb-1">{project.title}</h2>
               <span className="text-teal-400 text-sm mb-2">
                 {project.category}
@@ -142,23 +158,27 @@ export default function ProjectsPage() {
                 className="object-contain max-h-96 relative z-10"
               />
 
-              {/* Prev & Next buttons */}
-              <button
-                onClick={handlePrevImage}
-                className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/60 p-2 rounded-full z-20"
-              >
-                ◀
-              </button>
-              <button
-                onClick={handleNextImage}
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/60 p-2 rounded-full z-20"
-              >
-                ▶
-              </button>
+              {/* ✅ Prev & Next buttons only if more than 1 image */}
+              {selectedProject.images.length > 1 && (
+                <>
+                  <button
+                    onClick={handlePrevImage}
+                    className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/60 p-2 rounded-full z-20"
+                  >
+                    ◀
+                  </button>
+                  <button
+                    onClick={handleNextImage}
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/60 p-2 rounded-full z-20"
+                  >
+                    ▶
+                  </button>
+                </>
+              )}
             </div>
 
             {/* Text Section */}
-            <div className="flex flex-col items-start text-left overflow-y-auto max-h-60 scrollbar-thin scrollbar-thumb-transparent hover:scrollbar-thumb-teal-400">
+            <div className="flex flex-col items-start text-left overflow-y-auto max-h-60 scrollbar-hide">
               <h2 className="text-2xl font-bold mb-2">
                 {selectedProject.title}
               </h2>
@@ -173,20 +193,21 @@ export default function ProjectsPage() {
         </div>
       )}
 
-      {/* Custom scrollbar styling */}
-      <style jsx>{`
-        .scrollbar-thin::-webkit-scrollbar {
-          width: 6px;
+      {/* ✅ Global scrollbar hide style */}
+      <style jsx global>{`
+        ::-webkit-scrollbar {
+          display: none;
         }
-        .scrollbar-thin::-webkit-scrollbar-track {
-          background: transparent;
+        body {
+          -ms-overflow-style: none; /* IE and Edge */
+          scrollbar-width: none; /* Firefox */
         }
-        .scrollbar-thin::-webkit-scrollbar-thumb {
-          background: transparent;
-          border-radius: 3px;
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
         }
-        .scrollbar-thin:hover::-webkit-scrollbar-thumb {
-          background: #14b8a6; /* teal-400 */
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
         }
       `}</style>
     </div>
