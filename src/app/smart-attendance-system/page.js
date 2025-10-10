@@ -89,7 +89,7 @@ const TestimonialCard = ({ name, quote }) => (
       <p className="font-semibold text-lg text-blue-300">{name}</p>
       <div className="text-yellow-400 text-2xl">★★★★★</div>
     </div>
-    <p className="italic text-gray-300">"{quote}"</p>
+    <p className="italic text-gray-300">{quote}</p>
     <p className="text-sm mt-2 text-gray-500">3 months ago</p>
   </div>
 );
