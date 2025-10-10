@@ -22,16 +22,15 @@ export default function ProjectsPage() {
   const [currentImage, setCurrentImage] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState("All");
 
-  // ✅ Disable background scroll + hide scrollbar when modal open
+  // ✅ Disable background scroll when modal open
   useEffect(() => {
     if (selectedProject) {
-      document.body.style.overflow = "hidden";   // disable background scroll
-      document.body.style.paddingRight = "0px";  // remove scrollbar gap
+      document.body.style.overflow = "hidden";
+      document.body.style.paddingRight = "0px";
     } else {
-      document.body.style.overflow = "auto";     // enable back
+      document.body.style.overflow = "auto";
       document.body.style.paddingRight = "0px";
     }
-
     return () => {
       document.body.style.overflow = "auto";
       document.body.style.paddingRight = "0px";
@@ -58,6 +57,15 @@ export default function ProjectsPage() {
     selectedCategory === "All"
       ? projects
       : projects.filter((project) => project.category === selectedCategory);
+
+  // ✅ Calendly popup function
+  const openCalendlyPopup = () => {
+    if (typeof window !== "undefined" && window.Calendly) {
+      window.Calendly.initPopupWidget({
+        url: "https://calendly.com/wattincorporate/project-discussion-meeting?background_color=0b1620&text_color=ffffff&primary_color=0070f3",
+      });
+    }
+  };
 
   return (
     <div className="relative min-h-screen bg-gray-900 text-white p-10">
@@ -100,7 +108,6 @@ export default function ProjectsPage() {
               setCurrentImage(0);
             }}
           >
-            {/* Image */}
             <div className="w-full h-56 flex items-center justify-center bg-gray-900 rounded-lg mb-4">
               {project.images && project.images.length > 0 ? (
                 <Image
@@ -117,7 +124,6 @@ export default function ProjectsPage() {
               )}
             </div>
 
-            {/* Scrollable Content */}
             <div className="flex flex-col overflow-y-auto max-h-40 scrollbar-hide">
               <h2 className="text-xl font-semibold mb-1">{project.title}</h2>
               <span className="text-teal-400 text-sm mb-2">
@@ -129,18 +135,35 @@ export default function ProjectsPage() {
         ))}
       </div>
 
+      {/* ✨ CTA Section below projects */}
+      <section className="my-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-gray-900/90 rounded-3xl shadow-lg text-center py-16 relative overflow-hidden">
+        <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">
+         Interested in any of these services? 
+        </h2>
+        <p className="text-gray-400 mb-8 text-lg sm:text-xl">
+          Let’s collaborate and bring your ideas to life!
+        </p>
+        <button
+          onClick={openCalendlyPopup}
+          className="inline-block bg-teal-500 hover:bg-teal-400 text-white font-semibold text-lg px-8 py-4 rounded-2xl shadow-lg hover:shadow-teal-400/50 transition transform hover:-translate-y-1"
+        >
+          Book a Free Call
+        </button>
+
+        {/* Decorative Shapes */}
+        <div className="absolute top-0 left-0 w-64 h-64 bg-teal-500/20 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+        <div className="absolute bottom-0 right-0 w-64 h-64 bg-teal-500/20 rounded-full translate-x-1/2 translate-y-1/2"></div>
+      </section>
+
       {/* MODAL */}
       {selectedProject && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
-          {/* Overlay */}
           <div
             className="absolute inset-0 bg-black/70 backdrop-blur-md"
             onClick={() => setSelectedProject(null)}
           ></div>
 
-          {/* Modal Box */}
           <div className="relative bg-gray-800 rounded-2xl p-6 w-[95%] max-w-3xl shadow-2xl z-50 flex flex-col overflow-hidden">
-            {/* ✅ Close Button */}
             <button
               onClick={() => setSelectedProject(null)}
               className="absolute top-3 right-3 text-gray-400 hover:text-white text-2xl font-bold z-[60] bg-black/50 rounded-full p-1"
@@ -148,7 +171,6 @@ export default function ProjectsPage() {
               ✕
             </button>
 
-            {/* Image Carousel */}
             <div className="relative w-full h-96 flex items-center justify-center bg-gray-900 rounded-lg mb-6 overflow-hidden">
               <Image
                 src={selectedProject.images[currentImage]}
@@ -157,8 +179,6 @@ export default function ProjectsPage() {
                 height={400}
                 className="object-contain max-h-96 relative z-10"
               />
-
-              {/* ✅ Prev & Next buttons only if more than 1 image */}
               {selectedProject.images.length > 1 && (
                 <>
                   <button
@@ -177,7 +197,6 @@ export default function ProjectsPage() {
               )}
             </div>
 
-            {/* Text Section */}
             <div className="flex flex-col items-start text-left overflow-y-auto max-h-60 scrollbar-hide">
               <h2 className="text-2xl font-bold mb-2">
                 {selectedProject.title}
@@ -199,8 +218,8 @@ export default function ProjectsPage() {
           display: none;
         }
         body {
-          -ms-overflow-style: none; /* IE and Edge */
-          scrollbar-width: none; /* Firefox */
+          -ms-overflow-style: none;
+          scrollbar-width: none;
         }
         .scrollbar-hide {
           -ms-overflow-style: none;
