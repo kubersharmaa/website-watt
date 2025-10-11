@@ -22,58 +22,34 @@ export default function ProjectsPage() {
   const [currentImage, setCurrentImage] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState("All");
 
-  // ✅ Disable background scroll when modal open
+  // Disable background scroll when modal is open
   useEffect(() => {
-    if (selectedProject) {
-      document.body.style.overflow = "hidden";
-      document.body.style.paddingRight = "0px";
-    } else {
-      document.body.style.overflow = "auto";
-      document.body.style.paddingRight = "0px";
-    }
-    return () => {
-      document.body.style.overflow = "auto";
-      document.body.style.paddingRight = "0px";
-    };
+    document.body.style.overflow = selectedProject ? "hidden" : "auto";
+    return () => (document.body.style.overflow = "auto");
   }, [selectedProject]);
-
-  const handleNextImage = () => {
-    if (selectedProject) {
-      setCurrentImage((prev) => (prev + 1) % selectedProject.images.length);
-    }
-  };
-
-  const handlePrevImage = () => {
-    if (selectedProject) {
-      setCurrentImage(
-        (prev) =>
-          (prev - 1 + selectedProject.images.length) %
-          selectedProject.images.length
-      );
-    }
-  };
 
   const filteredProjects =
     selectedCategory === "All"
       ? projects
       : projects.filter((project) => project.category === selectedCategory);
 
-  // ✅ Calendly popup function
-  const openCalendlyPopup = () => {
-    if (typeof window !== "undefined" && window.Calendly) {
-      window.Calendly.initPopupWidget({
-        url: "https://calendly.com/wattincorporate/project-discussion-meeting?background_color=0b1620&text_color=ffffff&primary_color=0070f3",
-      });
-    }
+  const handleNextImage = () => {
+    setCurrentImage((prev) => (prev + 1) % selectedProject.images.length);
+  };
+
+  const handlePrevImage = () => {
+    setCurrentImage(
+      (prev) =>
+        (prev - 1 + selectedProject.images.length) %
+        selectedProject.images.length
+    );
   };
 
   return (
     <div className="relative min-h-screen bg-gray-900 text-white p-10">
       {/* Page Heading */}
       <div className="mb-10 text-center">
-        <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
-          Explore Our Projects
-        </h1>
+        <h1 className="text-3xl md:text-4xl font-bold mb-2">Explore Our Projects</h1>
         <p className="text-gray-400 max-w-2xl mx-auto">
           A showcase of our latest work, blending creativity and technology.
         </p>
@@ -97,7 +73,7 @@ export default function ProjectsPage() {
         ))}
       </div>
 
-      {/* Grid of projects */}
+      {/* Projects Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {filteredProjects.map((project) => (
           <div
@@ -109,7 +85,7 @@ export default function ProjectsPage() {
             }}
           >
             <div className="w-full h-56 flex items-center justify-center bg-gray-900 rounded-lg mb-4">
-              {project.images && project.images.length > 0 ? (
+              {project.images?.[0] ? (
                 <Image
                   src={project.images[0]}
                   alt={project.title}
@@ -123,39 +99,32 @@ export default function ProjectsPage() {
                 </div>
               )}
             </div>
-
             <div className="flex flex-col overflow-y-auto max-h-40 scrollbar-hide">
               <h2 className="text-xl font-semibold mb-1">{project.title}</h2>
-              <span className="text-teal-400 text-sm mb-2">
-                {project.category}
-              </span>
+              <span className="text-teal-400 text-sm mb-2">{project.category}</span>
               <p className="text-gray-400 text-sm">{project.description}</p>
             </div>
           </div>
         ))}
       </div>
 
-      {/* ✨ CTA Section below projects */}
+      {/* CTA Section */}
       <section className="my-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-gray-900/90 rounded-3xl shadow-lg text-center py-16 relative overflow-hidden">
-        <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">
-         Interested in any of these services? 
-        </h2>
+        <h2 className="text-3xl sm:text-4xl font-bold mb-6">Interested in any of these services?</h2>
         <p className="text-gray-400 mb-8 text-lg sm:text-xl">
           Let’s collaborate and bring your ideas to life!
         </p>
-        <button
-          onClick={openCalendlyPopup}
-          className="inline-block bg-teal-500 hover:bg-teal-400 text-white font-semibold text-lg px-8 py-4 rounded-2xl shadow-lg hover:shadow-teal-400/50 transition transform hover:-translate-y-1"
-        >
-          Book a Free Call
-        </button>
-
+        <div
+          className="calendly-inline-widget"
+          data-url="https://calendly.com/wattincorporate/project-discussion-meeting?background_color=0b1620&text_color=ffffff&primary_color=0070f3"
+          style={{ minWidth: "320px", height: "700px" , overflow: "hidden"}}
+        ></div>
         {/* Decorative Shapes */}
         <div className="absolute top-0 left-0 w-64 h-64 bg-teal-500/20 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
         <div className="absolute bottom-0 right-0 w-64 h-64 bg-teal-500/20 rounded-full translate-x-1/2 translate-y-1/2"></div>
       </section>
 
-      {/* MODAL */}
+      {/* Project Modal */}
       {selectedProject && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div
@@ -168,7 +137,7 @@ export default function ProjectsPage() {
               onClick={() => setSelectedProject(null)}
               className="absolute top-3 right-3 text-gray-400 hover:text-white text-2xl font-bold z-[60] bg-black/50 rounded-full p-1"
             >
-              ✕
+              
             </button>
 
             <div className="relative w-full h-96 flex items-center justify-center bg-gray-900 rounded-lg mb-6 overflow-hidden">
@@ -185,49 +154,33 @@ export default function ProjectsPage() {
                     onClick={handlePrevImage}
                     className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/60 p-2 rounded-full z-20"
                   >
-                    ◀
+                    
                   </button>
                   <button
                     onClick={handleNextImage}
                     className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/60 p-2 rounded-full z-20"
                   >
-                    ▶
+                    
                   </button>
                 </>
               )}
             </div>
 
             <div className="flex flex-col items-start text-left overflow-y-auto max-h-60 scrollbar-hide">
-              <h2 className="text-2xl font-bold mb-2">
-                {selectedProject.title}
-              </h2>
-              <span className="text-teal-400 text-sm mb-3">
-                {selectedProject.category}
-              </span>
-              <p className="text-gray-300 text-sm leading-relaxed whitespace-pre-line">
-                {selectedProject.description}
-              </p>
+              <h2 className="text-2xl font-bold mb-2">{selectedProject.title}</h2>
+              <span className="text-teal-400 text-sm mb-3">{selectedProject.category}</span>
+              <p className="text-gray-300 text-sm leading-relaxed whitespace-pre-line">{selectedProject.description}</p>
             </div>
           </div>
         </div>
       )}
 
-      {/* ✅ Global scrollbar hide style */}
+      {/* Global Scrollbar Hide */}
       <style jsx global>{`
-        ::-webkit-scrollbar {
-          display: none;
-        }
-        body {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-        .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
+        ::-webkit-scrollbar { display: none; }
+        body { -ms-overflow-style: none; scrollbar-width: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
       `}</style>
     </div>
   );

@@ -12,16 +12,33 @@ export default function CalendlyCTA() {
   }, []);
 
   const openCalendly = (e) => {
-    e.preventDefault();
-    if (window.Calendly) {
-      window.Calendly.initPopupWidget({
-        url: "https://calendly.com/wattincorporate/project-discussion-meeting?background_color=0b1620&text_color=ffffff&primary_color=0070f3",
-      });
-    } else {
-      alert("Calendly not loaded yet. Please wait a moment.");
-    }
-    return false;
-  };
+  e.preventDefault();
+  if (window.Calendly) {
+    // Directly open popup widget
+    window.Calendly.initPopupWidget({
+      url: "https://calendly.com/wattincorporate/project-discussion-meeting?background_color=0b1620&text_color=ffffff&primary_color=0070f3",
+      prefill: {},
+      utm: {}
+    });
+
+    // Body par overflow hide kar do jab popup open ho
+    document.body.style.overflow = "hidden";
+
+    // Automatically restore overflow when popup is closed
+    const checkCalendly = setInterval(() => {
+      const iframe = document.querySelector(".calendly-overlay iframe");
+      if (!iframe) {
+        document.body.style.overflow = "auto";
+        clearInterval(checkCalendly);
+      }
+    }, 500);
+    
+  } else {
+    alert("Calendly not loaded yet. Please wait a moment.");
+  }
+  return false;
+};
+
 
   return (
     <>

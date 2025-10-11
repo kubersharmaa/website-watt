@@ -2,14 +2,13 @@
 import "./globals.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import CalendlyCTA from "../components/CalendlyCTA"; // 👈 add this import
-import Script from "next/script"; // 👈 needed for Calendly widget script
-
+import CalendlyCTA from "../components/CalendlyCTA"; 
+import Script from "next/script"; 
 export const metadata = {
   title: "WATT Incorporate",
   description: "WATT Incorporate - Empowering Your Business with Innovative Solutions",
   icons: {
-    icon: "/logo.jpeg", // path relative to /public
+    icon: "/logo.jpeg",
   },
 };
 
@@ -33,7 +32,7 @@ export default function RootLayout({ children }) {
         <main className="container max-w-full">{children}</main>
         <Footer />
 
-        {/* 👇 Global floating CTA visible on all pages */}
+       
         <CalendlyCTA />
       </body>
     </html>

@@ -124,7 +124,7 @@ const CTASection = () => {
   const openCalendlyPopup = () => {
     if (typeof window !== "undefined" && window.Calendly) {
       window.Calendly.initPopupWidget({
-        url: "https://calendly.com/wattincorporate/project-discussion-meeting?background_color=0b1620&text_color=ffffff&primary_color=0070f3",
+        url: "https://calendly.com/wattincorporate/project-discussion-meeting?background_color=0b1620&text_color=ffffff&primary_color=0070f3&overflow=hidden",
       });
     } else {
       alert("Calendly not loaded yet. Please wait a moment.");
