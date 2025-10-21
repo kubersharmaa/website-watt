@@ -39,7 +39,7 @@ export default function FeedbackPage() {
   return (
     <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center px-4 py-10 sm:px-6">
       <div className="max-w-3xl w-full bg-gray-900 rounded-3xl shadow-2xl p-8 sm:p-12">
-        <h2 className="text-3xl sm:text-4xl font-extrabold mb-6 sm:mb-8 text-center">Give Us Your Feedback</h2>
+        <h2 className="text-3xl sm:text-4xl font-extrabold mb-6 sm:mb-8 text-center">Share Your Thoughts With Us</h2>
         <p className="mb-6 text-gray-300 text-center">
           Your feedback helps us improve our services. We’d love to hear your thoughts!
         </p>
