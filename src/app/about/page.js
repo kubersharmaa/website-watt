@@ -1,5 +1,4 @@
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
-import Testimonial from "@/components/Testimonial"; 
 
 export default function AboutPage() {
   return (
@@ -56,12 +55,10 @@ export default function AboutPage() {
               </div>
             </div>
           ))}
+          
         </div>
-
-        {/* Testimonials Section */}
-        {/* <Testimonial />   */}
-
-      </section>
+        
+</section>
 
       {/* Footer */}
       <footer className="bg-gray-900 mt-16 py-6">
@@ -73,6 +70,6 @@ export default function AboutPage() {
           </div>
         </div>
       </footer>
-    </div>
+  </div>
   );
 }

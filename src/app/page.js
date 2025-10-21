@@ -6,6 +6,8 @@ import Image from "next/image";
 import projects from "@/data/projects";
 import gallery from "@/data/gallery";
 import blogs from "@/data/blogs";
+import Testimonial from "@/components/Testimonial"; 
+import FeedbackPage from "@/components/FeedbackPage";
 
 const partners = [
   { id: 1, name: "Partner 1", logo: "/partners/SATI_Vidisha.jpg" },
@@ -194,6 +196,15 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      <div>
+    <Testimonial/>
+    </div>
+    <br></br>
+    <br></br>
+      <div>
+    <FeedbackPage/>
+    </div>
 
       {/* CTA Section */}
     <section
