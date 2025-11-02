@@ -1,29 +1,27 @@
-import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
 export async function POST(req) {
   try {
-    const body = await req.json();
-    const { name, email, subject, message } = body;
+    const { name, email, feedback } = await req.json();
 
-    // Transporter config
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER, // Gmail account
-        pass: process.env.EMAIL_PASS, // App Password
-      },
-    });
+    //  Simple validation
+    if (!name || !email || !feedback) {
+      return new Response(
+        JSON.stringify({ error: "All fields are required" }),
+        { status: 400 }
+      );
+    }
 
-    //  HTML email template
-    const htmlTemplate = `
-      <!DOCTYPE html>
+    //  Define your HTML email template (wrapped in backticks!)
+    const emailTemplate =`
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WATT Contact Notification</title>
+  <title>WATT Feedback Notification</title>
   <style>
+
     body {
       font-family: Arial, sans-serif;
       background-color: #f8f9fa;
@@ -69,6 +67,16 @@ export async function POST(req) {
       margin: 0;
     }
 
+    .headline {
+      color: #fff;
+      font-size: 15px;
+      font-weight: normal;
+      letter-spacing: 0.5px;
+      margin: 0;
+      text-align: right;
+      flex: 1;
+    }
+
     .content {
       padding: 30px;
       text-align: left;
@@ -84,7 +92,7 @@ export async function POST(req) {
       padding-bottom: 5px;
     }
 
-    .message-details {
+    .feedback-details {
       background-color: #f0f8ff;
       border-left: 4px solid #0077B6;
       padding: 15px 20px;
@@ -92,7 +100,7 @@ export async function POST(req) {
       margin: 20px 0;
     }
 
-    .message-details p {
+    .feedback-details p {
       margin: 6px 0;
       font-size: 15px;
     }
@@ -126,47 +134,67 @@ export async function POST(req) {
       <h1 class="brand-name">WATT INCORPORATE</h1>
     </div>
   </div>
+</div>
 
-  <div class="content">
-    <h2>New Contact Message</h2>
 
-    <div class="message-details">
-      <p><strong>Name:</strong> ${name}</p>
-      <p><strong>Email:</strong> ${email}</p>
-      <p><strong>Subject:</strong> ${subject}</p>
-      <p><strong>Message:</strong></p>
-      <p>${message.replace(/\n/g, "<br/>")}</p>
+
+    <div class="content">
+      <h2>New Feedback Received</h2>
+
+      <div class="feedback-details">
+        <p><strong>Name:</strong> {{name}}</p>
+        <p><strong>Email:</strong> {{email}}</p>
+        <p><strong>Feedback:</strong> {{feedback}}</p>
+      </div>
+
+      <p>
+        A new feedback has been received from your website.  
+        Please review and respond as needed.  
+        This report helps the <strong>WATT</strong> team continuously improve user experience.
+      </p>
     </div>
 
-    <p>
-      A new inquiry has been received through the WATT contact form.  
-      Please review and respond to this message promptly.  
-      This ensures we continue to provide excellent support to our users.
-    </p>
+    <div class="footer">
+      © 2025 WATT. All rights reserved.<br />
+      <a href="https://hellowatt.in">hellowatt.in</a>
+    </div>
   </div>
-
-  <div class="footer">
-    © ${new Date().getFullYear()} WATT. All rights reserved.<br />
-    <a href="https://hellowatt.in">hellowatt.in</a>
-  </div>
- </div>
 </body>
 </html>
     `;
 
-    //  Fixed sendMail config
-    await transporter.sendMail({
-      from: `"${name}" <${email}>`, // Proper template string
-      to: process.env.EMAIL_USER,
-      subject: `New Message: ${subject}`, // Proper backticks
-      html: htmlTemplate,
+    //  Setup Nodemailer transporter
+    const transporter = nodemailer.createTransport({
+      service: "gmail", 
+      auth: {
+        user: process.env.EMAIL_USER, // Gmail address
+        pass: process.env.EMAIL_PASS, // Gmail App Password
+      },
     });
 
-    return NextResponse.json({ success: true, message: "Mail sent successfully!" });
+    //  Send the email to admin instead of user
+await transporter.sendMail({
+  from: `"WATT" <${process.env.EMAIL_USER}>`,
+  to: process.env.EMAIL_USER, 
+  subject: "New Feedback Received",
+  html: emailTemplate
+    .replace(/{{name}}/g, name)
+    .replace(/{{email}}/g, email)
+    .replace(/{{feedback}}/g, feedback),
+});
+
+
+    //  Send success response
+    return new Response(
+      JSON.stringify({
+        message: "Feedback received and email sent successfully",
+      }),
+      { status: 200 }
+    );
   } catch (error) {
-    console.error("Error sending mail:", error);
-    return NextResponse.json(
-      { success: false, message: "Failed to send mail" },
+    console.error("Error processing feedback:", error);
+    return new Response(
+      JSON.stringify({ error: "Internal Server Error" }),
       { status: 500 }
     );
   }
