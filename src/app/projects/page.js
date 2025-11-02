@@ -22,11 +22,37 @@ export default function ProjectsPage() {
   const [currentImage, setCurrentImage] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState("All");
 
-  // Disable background scroll when modal is open
+  // ✅ Disable background scroll + hide scrollbar when modal open
   useEffect(() => {
-    document.body.style.overflow = selectedProject ? "hidden" : "auto";
-    return () => (document.body.style.overflow = "auto");
+    if (selectedProject) {
+      document.body.style.overflow = "hidden";   // disable background scroll
+      document.body.style.paddingRight = "0px";  // remove scrollbar gap
+    } else {
+      document.body.style.overflow = "auto";     // enable back
+      document.body.style.paddingRight = "0px";
+    }
+
+    return () => {
+      document.body.style.overflow = "auto";
+      document.body.style.paddingRight = "0px";
+    };
   }, [selectedProject]);
+
+  const handleNextImage = () => {
+    if (selectedProject) {
+      setCurrentImage((prev) => (prev + 1) % selectedProject.images.length);
+    }
+  };
+
+  const handlePrevImage = () => {
+    if (selectedProject) {
+      setCurrentImage(
+        (prev) =>
+          (prev - 1 + selectedProject.images.length) %
+          selectedProject.images.length
+      );
+    }
+  };
 
   const filteredProjects =
     selectedCategory === "All"
@@ -99,6 +125,8 @@ export default function ProjectsPage() {
                 </div>
               )}
             </div>
+
+            {/* Scrollable Content */}
             <div className="flex flex-col overflow-y-auto max-h-40 scrollbar-hide">
               <h2 className="text-xl font-semibold mb-1">{project.title}</h2>
               <span className="text-teal-400 text-sm mb-2">{project.category}</span>
@@ -148,6 +176,8 @@ export default function ProjectsPage() {
                 height={400}
                 className="object-contain max-h-96 relative z-10"
               />
+
+              {/* ✅ Prev & Next buttons only if more than 1 image */}
               {selectedProject.images.length > 1 && (
                 <>
                   <button
@@ -155,12 +185,14 @@ export default function ProjectsPage() {
                     className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/60 p-2 rounded-full z-20"
                   >
                     
+                    ◀
                   </button>
                   <button
                     onClick={handleNextImage}
                     className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/60 p-2 rounded-full z-20"
                   >
                     
+                    ▶
                   </button>
                 </>
               )}
@@ -170,17 +202,38 @@ export default function ProjectsPage() {
               <h2 className="text-2xl font-bold mb-2">{selectedProject.title}</h2>
               <span className="text-teal-400 text-sm mb-3">{selectedProject.category}</span>
               <p className="text-gray-300 text-sm leading-relaxed whitespace-pre-line">{selectedProject.description}</p>
+            {/* Text Section */}
+            <div className="flex flex-col items-start text-left overflow-y-auto max-h-60 scrollbar-hide">
+              <h2 className="text-2xl font-bold mb-2">
+                {selectedProject.title}
+              </h2>
+              <span className="text-teal-400 text-sm mb-3">
+                {selectedProject.category}
+              </span>
+              <p className="text-gray-300 text-sm leading-relaxed whitespace-pre-line">
+                {selectedProject.description}
+              </p>
             </div>
           </div>
         </div>
       )}
 
-      {/* Global Scrollbar Hide */}
+      {/* ✅ Global scrollbar hide style */}
       <style jsx global>{`
-        ::-webkit-scrollbar { display: none; }
-        body { -ms-overflow-style: none; scrollbar-width: none; }
-        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        ::-webkit-scrollbar {
+          display: none;
+        }
+        body {
+          -ms-overflow-style: none; /* IE and Edge */
+          scrollbar-width: none; /* Firefox */
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
       `}</style>
     </div>
   );

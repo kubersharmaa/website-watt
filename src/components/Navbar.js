@@ -3,15 +3,13 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { Menu, X } from "lucide-react";
-import { usePathname } from "next/navigation";
-import ProductDropdown from "./ProductDropdown";
+import Image from "next/image"; 
+import { Menu, X } from "lucide-react"; 
+import { usePathname } from "next/navigation";  // ✅ path detect karne ke liye
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isProductDropdownOpen, setIsProductDropdownOpen] = useState(false);
-  const pathname = usePathname();
+  const pathname = usePathname();  // ✅ current path mil jayega
 
   const menuItems = [
     { name: "Home", path: "/" },
@@ -29,12 +27,9 @@ export default function Navbar() {
   return (
     <nav className="shadow-lg relative">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between bg-gray-900 text-white rounded-lg">
-        {/* Logo */}
-        <Link
-          href="/"
-          className="flex items-center space-x-6"
-          onClick={closeAllMenus}
-        >
+        
+        {/* Logo (Clickable) */}
+        <Link href="/" className="flex items-center space-x-6">
           <Image
             src="/logo.jpeg"
             alt="Watt Incorporate Logo"
@@ -50,7 +45,7 @@ export default function Navbar() {
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center space-x-8">
           {menuItems.map((item) => {
-            const isActive = pathname === item.path;
+            const isActive = pathname === item.path; // ✅ check current page
             return (
               <Link
                 key={item.name}
@@ -133,19 +128,6 @@ export default function Navbar() {
               </Link>
             );
           })}
-
-          <Link
-            href="/smart-attendance-system"
-            className={`block font-medium transition ${
-              pathname.startsWith("/smart-attendance-system")
-                ? "text-blue-400"
-                : "hover:text-blue-400"
-            }`}
-            onClick={() => setMenuOpen(false)}
-          >
-            Products
-          </Link>
-
           <Link
             href="/contact"
             className="block bg-blue-500 text-center text-white px-5 py-2 rounded-md font-semibold hover:bg-blue-600 transition shadow-md"
