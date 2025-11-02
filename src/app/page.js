@@ -6,6 +6,8 @@ import Image from "next/image";
 import projects from "@/data/projects";
 import gallery from "@/data/gallery";
 import blogs from "@/data/blogs";
+import Testimonial from "@/components/Testimonial"; 
+import FeedbackPage from "@/components/FeedbackPage";
 
 const partners = [
   { id: 1, name: "Partner 1", logo: "/partners/SATI_Vidisha.jpg" },
@@ -29,7 +31,7 @@ export default function Home() {
   const [selectedProject, setSelectedProject] = useState(null);
 
   return (
-    <>
+    <div className={`${selectedProject ? "overflow-hidden" : ""}`}>
       <Hero />
 
       {/* Services Section */}
@@ -125,7 +127,7 @@ export default function Home() {
                 Category: {selectedProject.category} | Status: {selectedProject.status}
               </p>
             </div>
-          </div>
+          </>
         )}
       </section>
 

@@ -1,77 +1,79 @@
-// "use client";
-// import Image from "next/image";
+"use client";
+import { useState, useEffect } from "react";
+import testimonials from "@/data/testimonials";
 
-// export default function Testimonial() {
-//   const testimonials = [
-//     {
-//       name: "Arjun Mehta",
-//       role: "Industrial Engineer",
-//       feedback:
-//         "WATT&apos;s robotics solutions helped automate our production line, saving time and reducing errors significantly.",
-//       image: "/testimonials/arjun.jpg",
-//     },
-//     {
-//       name: "Priya Singh",
-//       role: "Startup Founder",
-//       feedback:
-//         "The team at WATT guided us through IT automation and IoT integration. Their expertise transformed our workflow.",
-//       image: "/testimonials/priya.jpg",
-//     },
-//     {
-//       name: "Vikram Joshi",
-//       role: "IT Manager",
-//       feedback:
-//         "WATT&apos;s consulting helped our company implement AI-driven solutions. Their support and training were exceptional.",
-//       image: "/testimonials/vikram.jpg",
-//     },
-//     {
-//       name: "Ananya Roy",
-//       role: "School Administrator",
-//       feedback:
-//         "WATT&apos;s smart attendance system improved efficiency and accuracy for our school management. Students and teachers love it!",
-//       image: "/testimonials/ananya.jpg",
-//     },
-//     {
-//       name: "Rohit Kapoor",
-//       role: "Automation Engineer",
-//       feedback:
-//         "Their AI-powered robotics kits are intuitive and powerful. WATT helped our team learn and implement advanced solutions seamlessly.",
-//       image: "/testimonials/rohit.jpg",
-//     },
-//     {
-//       name: "Sneha Patil",
-//       role: "Healthcare Consultant",
-//       feedback:
-//         "WATT&apos;s automation solutions in medical devices improved patient monitoring and efficiency. Truly innovative and reliable.",
-//       image: "/testimonials/sneha.jpg",
-//     },
-//   ];
+export default function Testimonial() {
+  const [current, setCurrent] = useState(0);
 
-//   return (
-//     <section className="bg-gray-900 text-white py-16">
-//       <div className="max-w-6xl mx-auto px-6">
-//         <h2 className="text-3xl font-bold mb-12 text-center">What Our Clients Say</h2>
-//         <div className="grid md:grid-cols-3 gap-8">
-//           {testimonials.map((t, index) => (
-//             <div
-//               key={index}
-//               className="bg-gray-800 rounded-xl p-6 flex flex-col items-center text-center shadow-lg"
-//             >
-//               <div className="w-24 h-24 relative mb-4">
-//                 <Image
-//                   src={t.image}
-//                   alt={t.name}
-//                   fill
-//                   className="rounded-full object-cover"
-//                 />
-//               </div>
-//               <h3 className="text-xl font-semibold">{t.name}</h3>
-//               <p className="text-sm text-gray-400 mb-3">{t.role}</p>
-//               <p className="text-gray-200">&quot;{t.feedback}&quot;</p>
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-//     </section>
-//   );
-// }
+  const cardWidth = 320;
+  const gap = 24;
+  const visibleCards = 3;
+
+  const totalCards = testimonials.length;
+
+  // Circular next/prev
+  const prevSlide = () => {
+    setCurrent((prev) => (prev - 1 + totalCards) % totalCards);
+  };
+
+  const nextSlide = () => {
+    setCurrent((prev) => (prev + 1) % totalCards);
+  };
+
+  // Prepare infinite loop by duplicating cards
+  const extendedTestimonials = [...testimonials, ...testimonials];
+
+  return (
+    <section className="bg-gray-900 text-white py-16">
+      <div className="max-w-6xl mx-auto px-6 text-center">
+        <h2 className="text-3xl font-bold mb-12">What Our Clients Say</h2>
+
+        <div className="relative flex justify-center items-center">
+          {/* Prev Button */}
+          <button
+            onClick={prevSlide}
+            className="absolute left-0 bg-gray-700 hover:bg-gray-600 text-white rounded-full p-3 shadow z-10"
+          >
+            &#10094;
+          </button>
+
+          {/* Slider */}
+          <div
+            className="overflow-hidden"
+            style={{ width: `${visibleCards * (cardWidth + gap) - gap}px` }}
+          >
+            <div
+              className="flex transition-transform duration-500 ease-in-out"
+              style={{
+                transform: `translateX(-${current * (cardWidth + gap)}px)`,
+                gap: `${gap}px`,
+              }}
+            >
+              {extendedTestimonials.map((t, index) => (
+                <div
+                  key={index}
+                  className="bg-gray-800 rounded-xl p-8 shadow-lg flex-shrink-0"
+                  style={{ width: `${cardWidth}px` }}
+                >
+                  {/* Image section */}
+                  {/* <img src={t.image} alt={t.name} className="rounded-full w-24 h-24 mx-auto mb-4" /> */}
+                  <h3 className="text-xl font-semibold mb-1">{t.name}</h3>
+                  <p className="text-sm text-gray-400 mb-4">{t.role}</p>
+                  <p className="text-gray-200 italic">&quot;{t.feedback}&quot;</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Next Button */}
+          <button
+            onClick={nextSlide}
+            className="absolute right-0 bg-gray-700 hover:bg-gray-600 text-white rounded-full p-3 shadow z-10"
+          >
+            &#10095;
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}

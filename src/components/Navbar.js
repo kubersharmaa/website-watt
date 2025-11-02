@@ -1,3 +1,5 @@
+// components/Navbar.js
+
 "use client";
 import { useState } from "react";
 import Link from "next/link";
@@ -17,8 +19,13 @@ export default function Navbar() {
     { name: "Blogs", path: "/blogs" },
   ];
 
-  return (  
-    <nav className="shadow-lg">
+  const closeAllMenus = () => {
+    setMenuOpen(false);
+    setIsProductDropdownOpen(false);
+  };
+
+  return (
+    <nav className="shadow-lg relative">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between bg-gray-900 text-white rounded-lg">
         
         {/* Logo (Clickable) */}
@@ -46,9 +53,9 @@ export default function Navbar() {
                 className={`relative font-medium transition duration-200 group ${
                   isActive ? "text-blue-400" : "hover:text-blue-400"
                 }`}
+                onClick={closeAllMenus}
               >
                 {item.name}
-                {/* underline */}
                 <span
                   className={`absolute left-0 -bottom-1 h-0.5 bg-blue-400 transition-all ${
                     isActive ? "w-full" : "w-0 group-hover:w-full"
@@ -58,16 +65,43 @@ export default function Navbar() {
             );
           })}
 
-          {/* Contact Us Button */}
+          {/* 🧠 Products Dropdown (Hover to open) */}
+          <div
+            className="relative h-full flex items-center"
+            onMouseEnter={() => setIsProductDropdownOpen(true)}
+            onMouseLeave={() => setIsProductDropdownOpen(false)}
+          >
+            <button
+              className={`relative font-medium transition duration-200 group focus:outline-none ${
+                isProductDropdownOpen ? "text-blue-400" : "hover:text-blue-400"
+              }`}
+            >
+              Products
+              <span
+                className={`absolute left-0 -bottom-1 h-0.5 bg-blue-400 transition-all ${
+                  isProductDropdownOpen ? "w-full" : "w-0 group-hover:w-full"
+                }`}
+              ></span>
+            </button>
+
+            {/* Dropdown Component */}
+            <ProductDropdown
+              isOpen={isProductDropdownOpen}
+              closeMenu={closeAllMenus}
+            />
+          </div>
+
+          {/* Contact Button */}
           <Link
             href="/contact"
             className="bg-blue-500 text-white px-5 py-2 rounded-md font-semibold hover:bg-blue-600 transition shadow-md"
+            onClick={closeAllMenus}
           >
             Contact Us
           </Link>
         </div>
 
-        {/* Mobile Menu Button */}
+        {/* Mobile Menu Toggle */}
         <button
           className="md:hidden text-white"
           onClick={() => setMenuOpen(!menuOpen)}
