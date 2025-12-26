@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function FeedbackPage() {
   const [formData, setFormData] = useState({
@@ -14,8 +14,22 @@ export default function FeedbackPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Email validation regex
+  const isValidEmail = (email) => {
+    const emailRegex =
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Invalid email
+    if (!isValidEmail(formData.email)) {
+      setStatus("Invalid email address. Please enter a valid email");
+      return;
+    }
+
     setStatus("Sending...");
 
     try {
@@ -26,15 +40,26 @@ export default function FeedbackPage() {
       });
 
       if (res.ok) {
-        setStatus(" Feedback sent successfully!");
+        setStatus("Feedback sent successfully!");
         setFormData({ name: "", email: "", feedback: "" });
       } else {
-        setStatus("❌ Failed to send feedback. Try again!");
+        setStatus("Failed to send feedback. Try again!");
       }
     } catch (error) {
-      setStatus("⚠️ Error: " + error.message);
+      setStatus("Error: " + error.message);
     }
   };
+
+  // Auto hide status message after 7 seconds
+  useEffect(() => {
+    if (status) {
+      const timer = setTimeout(() => {
+        setStatus("");
+      }, 7000); // 5–10 sec (change if needed)
+
+      return () => clearTimeout(timer);
+    }
+  }, [status]);
 
   return (
     <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center px-4 py-10 sm:px-6">
