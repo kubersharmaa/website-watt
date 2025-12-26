@@ -20,6 +20,15 @@ export default function Testimonial() {
     setCurrent((prev) => (prev + 1) % totalCards);
   };
 
+  //  Auto slide 
+  useEffect(() => { 
+    const interval = setInterval(() => {
+      nextSlide();
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   // Prepare infinite loop by duplicating cards
   const extendedTestimonials = [...testimonials, ...testimonials];
 
@@ -55,8 +64,6 @@ export default function Testimonial() {
                   className="bg-gray-800 rounded-xl p-8 shadow-lg flex-shrink-0"
                   style={{ width: `${cardWidth}px` }}
                 >
-                  {/* Image section */}
-                  {/* <img src={t.image} alt={t.name} className="rounded-full w-24 h-24 mx-auto mb-4" /> */}
                   <h3 className="text-xl font-semibold mb-1">{t.name}</h3>
                   <p className="text-sm text-gray-400 mb-4">{t.role}</p>
                   <p className="text-gray-200 italic">&quot;{t.feedback}&quot;</p>
