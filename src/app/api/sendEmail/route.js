@@ -122,8 +122,8 @@ export async function POST(req) {
  <div class="email-container">
   <div class="header">
     <div class="header-left">
-      <img src="/logo1.png" alt="WATT Logo" class="logo" />
-      <h1 class="brand-name">WATT INCORPORATE</h1>
+     <img src="https://hellowatt.in/logo.jpeg" alt="WATT Logo" class="logo" />
+      <h1 class="brand-name">  WATT INCORPORATE</h1>
     </div>
   </div>
 
